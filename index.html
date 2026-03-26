@@ -3,105 +3,52 @@
 <head>
     <title>Chatrapathi Portfolio</title>
 </head>
-<body style="font-family: Arial; text-align:center;">
+<body style="text-align:center;font-family:Arial">
 
     <h1>Chatrapathi</h1>
     <p>BCA Student | Web Developer</p>
 
-    <h2>About Me</h2>
-    <p>I build web applications and learning full stack development.</p>
-
-    <h2>Skills</h2>
-    <p>HTML, CSS, JavaScript, Python, Flask</p>
-
     <h2>Contact Me</h2>
+
     <form id="form">
-        <input type="text" id="name" placeholder="Name" required><br><br>
-        <input type="text" id="roll" placeholder="Roll No" required><br><br>
-        <input type="email" id="email" placeholder="Email" required><br><br>
+        <input id="name" placeholder="Name" required><br><br>
+        <input id="roll" placeholder="Roll No" required><br><br>
+        <input id="email" placeholder="Email" required><br><br>
         <button type="submit">Submit</button>
     </form>
 
+    <h2>Submitted Data</h2>
+    <div id="data"></div>
+
     <script>
+        const backend = "https://chatrapathi-portfolio-1.onrender.com"; // 🔴 CHANGE THIS
+
         document.getElementById("form").addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const data = {
-                name: document.getElementById("name").value,
-                roll: document.getElementById("roll").value,
-                email: document.getElementById("email").value
-            };
-
-            const res = await fetch("https://your-backend-url.onrender.com/submit", {
+            await fetch(`${backend}/submit`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: document.getElementById("name").value,
+                    roll: document.getElementById("roll").value,
+                    email: document.getElementById("email").value
+                })
             });
 
-            const result = await res.json();
-            alert(result.message);
+            loadData();
         });
+
+        async function loadData() {
+            const res = await fetch(`${backend}/data`);
+            const data = await res.json();
+
+            document.getElementById("data").innerHTML =
+                data.map(d => `<p>${d.name} | ${d.roll} | ${d.email}</p>`).join("");
+        }
+
+        loadData();
     </script>
 
 </body>
 </html>
-
-<script>
-const backend = "https://your-backend.onrender.com"; // 🔴 CHANGE THIS
-
-// SUBMIT FORM
-document.getElementById("form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const data = {
-        name: document.getElementById("name").value,
-        roll: document.getElementById("roll").value,
-        email: document.getElementById("email").value
-    };
-
-    try {
-        const res = await fetch(`${backend}/submit`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await res.json();
-        alert(result.message);
-
-        loadData(); // reload data after submit
-
-    } catch (err) {
-        console.error("Submit error:", err);
-    }
-});
-
-// FETCH DATA
-async function loadData() {
-    try {
-        const res = await fetch(`${backend}/data`);
-        const data = await res.json();
-
-        const container = document.getElementById("data");
-        container.innerHTML = "";
-
-        data.forEach(item => {
-            const div = document.createElement("div");
-            div.innerHTML = `
-                <p>${item.name} | ${item.roll} | ${item.email}</p>
-            `;
-            container.appendChild(div);
-        });
-
-    } catch (err) {
-        console.error("Fetch error:", err);
-    }
-}
-
-// LOAD DATA ON PAGE LOAD
-loadData();
-</script>
