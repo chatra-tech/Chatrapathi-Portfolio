@@ -73,3 +73,30 @@ def get_data():
     except Exception as e:
         print("ERROR:", e)
         return jsonify({"message": "Error fetching data"}), 500
+
+def create_table():
+    try:
+        conn = get_db_connection()
+        if conn is None:
+            print("❌ DB connection failed during table creation")
+            return
+
+        cur = conn.cursor()
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS contacts (
+                id SERIAL PRIMARY KEY,
+                name TEXT,
+                roll TEXT,
+                email TEXT
+            );
+        """)
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        print("✅ Table checked/created successfully")
+
+    except Exception as e:
+        print("❌ TABLE CREATION ERROR:", e)
