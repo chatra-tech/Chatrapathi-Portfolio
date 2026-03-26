@@ -43,3 +43,33 @@ def home():
 
 if __name__ == '__main__':
     app.run()
+
+@app.route('/data', methods=['GET'])
+def get_data():
+    try:
+        conn = get_db_connection()
+        if conn is None:
+            return jsonify({"message": "Database connection failed"}), 500
+
+        cur = conn.cursor()
+
+        cur.execute("SELECT name, roll, email FROM contacts")
+        rows = cur.fetchall()
+
+        cur.close()
+        conn.close()
+
+        # Convert to JSON
+        data = []
+        for row in rows:
+            data.append({
+                "name": row[0],
+                "roll": row[1],
+                "email": row[2]
+            })
+
+        return jsonify(data)
+
+    except Exception as e:
+        print("ERROR:", e)
+        return jsonify({"message": "Error fetching data"}), 500
