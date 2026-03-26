@@ -2,25 +2,80 @@
 <html>
 <head>
     <title>Chatrapathi Portfolio</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            margin-top: 80px;
+        }
+
+        .card {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 12px;
+            width: 300px;
+            margin: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #2a5298;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1e3c72;
+        }
+
+        #success {
+            margin-top: 15px;
+            color: green;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
 </head>
-<body style="text-align:center;font-family:Arial">
+<body>
 
-    <h1>Chatrapathi</h1>
-    <p>BCA Student | Web Developer</p>
+    <div class="container">
+        <h1>Chatrapathi</h1>
+        <p>BCA Student | Web Developer</p>
 
-    <h2>Contact Me</h2>
+        <div class="card">
+            <h2>Contact Me</h2>
 
-    <form id="form">
-        <input id="name" placeholder="Name" required><br><br>
-        <input id="roll" placeholder="Roll No" required><br><br>
-        <input id="email" placeholder="Email" required><br><br>
-        <button type="submit">Submit</button>
-    </form>
+            <form id="form">
+                <input id="name" placeholder="Name" required><br>
+                <input id="roll" placeholder="Roll No" required><br>
+                <input id="email" placeholder="Email" required><br>
+                <button type="submit">Submit</button>
+            </form>
 
-    <div id="data"></div>
+            <div id="success">Submitted Successfully ✅</div>
+        </div>
+    </div>
 
     <script>
-        const backend = "https://chatrapathi-portfolio-1.onrender.com"; // 🔴 CHANGE THIS
+        const backend = "https://your-backend.onrender.com"; // 🔴 PUT YOUR URL
 
         document.getElementById("form").addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -35,18 +90,12 @@
                 })
             });
 
-            loadData();
+            // show success
+            document.getElementById("success").style.display = "block";
+
+            // clear form
+            document.getElementById("form").reset();
         });
-
-        async function loadData() {
-            const res = await fetch(`${backend}/data`);
-            const data = await res.json();
-
-            document.getElementById("data").innerHTML =
-                data.map(d => `<p>${d.name} | ${d.roll} | ${d.email}</p>`).join("");
-        }
-
-        loadData();
     </script>
 
 </body>
